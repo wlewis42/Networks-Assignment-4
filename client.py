@@ -18,13 +18,13 @@ logFile = args.l
 socket.inet_aton(ip)
 
 if((int(port)) < 0 or (int(port)) > 65535) :
-    print("\nError invalid port, try agian with a different port number.")
+    print("ERROR: invalid port.\n")
     exit()
 
 
 
 while True:
-   user_input = input("\nEnter a Command (LIGHTON, LIGHTOFF, DISCONNECT): ")
+   user_input = input("Enter a Command (LIGHTON, LIGHTOFF, DISCONNECT): \n")
 
    # create socket
    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -42,7 +42,7 @@ while True:
    msg_len = len("HELLO")
    header = s.pack(version, msg_type, msg_len)
 
-   file.write("\nSending HELLO packet")
+   file.write("Sending HELLO packet\n")
    client.send(header)
    client.sendall(helloMess)
 
@@ -76,26 +76,26 @@ while True:
    version, msg_type, msg_len = struct.unpack('>III', header)
    data = client.recv(msg_len) 
 
-   file.write(f"Received connection from (IP, PORT): {ip}, {port}")
-   print(f"Received connection from (IP, PORT): {ip}, {port}")
+   file.write(f"Received connection from (IP, PORT): {ip}, {port}\n")
+   print(f"Received connection from (IP, PORT): {ip}, {port}\n")
 
    if(data.decode() == "HELLO"):
-      print("Recieved Messaged Hello")
-      file.write("Recieved Messaged Hello")
+      print("Recieved Messaged Hello\n")
+      file.write("Recieved Messaged Hello\n")
 
    if(version==17):
-      print("VERSION ACCEPTED")
-      file.write("VERSION ACCEPTED")
-      print("Sending Command")
-      file.write("Sending Command")
+      print("VERSION ACCEPTED\n")
+      file.write("VERSION ACCEPTED\n")
+      print("Sending Command\n")
+      file.write("Sending Command\n")
 
       if(data.decode() == "Success"):
-         print("Received Message SUCCESS")
-         file.write("Received Message SUCCESS")
+         print("Received Message SUCCESS\n")
+         file.write("Received Message SUCCESS\n")
       
    else:
-      print("VERSION MISMATCH")
-      file.write("VERSION MISMATCH")
+      print("VERSION MISMATCH\n")
+      file.write("VERSION MISMATCH\n")
 
    # send correct command
    if (user_input=="LIGHTON"):

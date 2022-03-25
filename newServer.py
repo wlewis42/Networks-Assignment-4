@@ -1,5 +1,5 @@
 import argparse
-from email import message
+from _thread import *
 import socket
 import struct
 
@@ -20,6 +20,76 @@ if((int(port)) < 0 or (int(port)) > 65535) :
     print("\nError invalid port, try agian with a different port number.")
     exit()
 
+def threaded_client(connection):
+        file = open(logFile, "a")
+
+        #Receiving Data from client
+        header = connection.recv(struct.calcsize('>III'))
+        version, msg_type, msg_len = struct.unpack('>III', header)
+        data = connection.recv(msg_len)
+
+        #Acknowledgement 
+        if(data.decode()=="HELLO"):
+
+            file.write(f"\nReceived connection from (IP, PORT): {address}")
+            # print("Received connection from (IP, PORT):" + str(port))
+            print(f"\nReceived connection from (IP, PORT): {address}")
+
+            version= 17
+            msg_type = 0
+            message = "HELLO".encode()
+            msg_len = len("HELLO")
+            header = s.pack(version, msg_type, msg_len)
+
+            connection.send(header)
+            connection.sendall(message)
+
+        #Printing data that is recieved
+        print(f"\nReceived Data: version: {version} message_type:  {msg_type} length: {msg_len}")
+        file.write(f"\nReceived Data: version: {version} message_type:  {msg_type} length: {msg_len}\n")
+
+        #Checking for valid version
+        if(version==17):
+            print("\nVERSION ACCEPTED")
+            file.write("\nVERSION ACCEPTED")
+
+            header = connection.recv(struct.calcsize('>III'))
+            version, msg_type, msg_len = struct.unpack('>III', header)
+
+            if(msg_type==1):
+                print("\nEXECUTING SUPPORTED COMMAND: LIGHTON")
+                file.write("\nEXECUTING SUPPORTED COMMAND: LIGHTON")
+
+                print("\nReturning Success")
+                file.write("\nReturning Success")
+
+                successMessage = "Success".encode()
+                connection.sendall(successMessage)
+
+            elif(msg_type==2):
+                print("\nEXECUTING SUPPORTED COMMAND: LIGHTOFF")
+                file.write("\nEXECUTING SUPPORTED COMMAND: LIGHTOFF")
+
+                print("\nReturning Success")
+                file.write("\nReturning Success")
+
+                successMessage = "Success".encode()
+                connection.sendall(successMessage)
+            
+            elif(msg_type==3):
+                print("\nEXECUTING SUPPORTED COMMAND: DISCONNECT")
+                file.write("\nEXECUTING SUPPORTED COMMAND: DISCONNECT")
+
+                print("\nReturning Success")
+                file.write("\nReturning Success")
+
+                successMessage = "Success".encode()
+                connection.sendall(successMessage)
+
+        else:
+            print("\nVERSION MISMATCH")
+            file.write("\nVERSION MISMATCH")
+
 #Creating Socket
 while True: 
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -33,72 +103,4 @@ while True:
         
     serversocket.listen(5)
     conn, address = serversocket.accept()
-
-    file = open(logFile, "a")
-
-    #Receiving Data from client
-    header = conn.recv(struct.calcsize('>III'))
-    version, msg_type, msg_len = struct.unpack('>III', header)
-    data = conn.recv(msg_len)
-
-    #Acknowledgement 
-    if(data.decode()=="HELLO"):
-
-        file.write(f"\nReceived connection from (IP, PORT): {address}")
-        # print("Received connection from (IP, PORT):" + str(port))
-        print(f"\nReceived connection from (IP, PORT): {address}")
-
-        version= 17
-        msg_type = 0
-        message = "HELLO".encode()
-        msg_len = len("HELLO")
-        header = s.pack(version, msg_type, msg_len)
-
-        conn.send(header)
-        conn.sendall(message)
-
-    #Printing data that is recieved
-    print(f"\nReceived Data: version: {version} message_type:  {msg_type} length: {msg_len}")
-    file.write(f"\nReceived Data: version: {version} message_type:  {msg_type} length: {msg_len}\n")
-
-    #Checking for valid version
-    if(version==17):
-        print("\nVERSION ACCEPTED")
-        file.write("\nVERSION ACCEPTED")
-
-        header = conn.recv(struct.calcsize('>III'))
-        version, msg_type, msg_len = struct.unpack('>III', header)
-
-        if(msg_type==1):
-            print("\nEXECUTING SUPPORTED COMMAND: LIGHTON")
-            file.write("\nEXECUTING SUPPORTED COMMAND: LIGHTON")
-
-            print("\nReturning Success")
-            file.write("\nReturning Success")
-
-            successMessage = "Success".encode()
-            conn.sendall(successMessage)
-
-        elif(msg_type==2):
-            print("\nEXECUTING SUPPORTED COMMAND: LIGHTOFF")
-            file.write("\nEXECUTING SUPPORTED COMMAND: LIGHTOFF")
-
-            print("\nReturning Success")
-            file.write("\nReturning Success")
-
-            successMessage = "Success".encode()
-            conn.sendall(successMessage)
-        
-        elif(msg_type==3):
-            print("\nEXECUTING SUPPORTED COMMAND: DISCONNECT")
-            file.write("\nEXECUTING SUPPORTED COMMAND: DISCONNECT")
-
-            print("\nReturning Success")
-            file.write("\nReturning Success")
-
-            successMessage = "Success".encode()
-            conn.sendall(successMessage)
-
-    else:
-        print("\nVERSION MISMATCH")
-        file.write("\nVERSION MISMATCH")
+    start_new_thread(threaded_client, (conn,))
