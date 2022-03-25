@@ -22,7 +22,7 @@ socket.inet_aton(ip)
 if((int(args.p)) > 0 or (int(args.p)) <= 65535):
    port = int(args.p)
 else:
-   print("Not a valid port number.")
+   print("\nNot a valid port number.")
    exit()
 
 user_input = input("Enter a command: ")
@@ -34,14 +34,14 @@ client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
    client_socket.connect(ip,port)
 except:
-   print(f"Unable to connect to (IP, PORT): {ip}, {port}")
+   print(f"\nUnable to connect to (IP, PORT): {ip}, {port}")
    log = open(logfile,"a")
-   log.write(f"Unable to connect to (IP, PORT): {ip}, {port}")
+   log.write(f"\nUnable to connect to (IP, PORT): {ip}, {port}")
 
 try:
    client_socket.sendmsg("HELLO")
 except:
-   print(f"Unable to send 'HELLO'")
+   print(f"\nUnable to send 'HELLO'")
 
 # send commands
 def sendMsg(msg):
@@ -60,15 +60,18 @@ def sendMsg(msg):
    header = (version, msg_type, msg_len, msg.encode())
    packed = s.pack(header)
    client_socket.sendall(packed)
-   log.write(f"Sending Command {msg}")
+   log.write(f"\nSending Command {msg}")
 
 # # receive messages
 # def receive(data):
 conn, addr = client_socket.accept()
-print(f"Received Connection (IP, PORT): {addr}, {conn}")
 header = conn.recv(struct.calcsize('>III'))
 version, msg_type, msg_len = struct.unpack('>III',header)
 msg = client_socket.recv(msg_len).decode() # receive data
+
+#Printing data that is recieved
+print(f"\nReceived Data: version: {version} message_type:  {msg_type} length: {msg_len}")
+log.write(f"\nReceived Data: version: {version} message_type:  {msg_type} length: {msg_len}")
 
 # send correct command
 if (user_input=="HELLO"):

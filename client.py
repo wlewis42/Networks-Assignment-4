@@ -1,5 +1,4 @@
 import argparse
-from pydoc import cli
 import socket
 import struct
 
@@ -19,13 +18,13 @@ logFile = args.l
 socket.inet_aton(ip)
 
 if((int(port)) < 0 or (int(port)) > 65535) :
-    print("Error invalid port, try agian with a different port number.")
+    print("\nError invalid port, try agian with a different port number.")
     exit()
 
 
 
 while True:
-   user_input = input("Type one of the following commands: \n LIGHTON \n LIGHTOFF \n DISCONNECT \n ")
+   user_input = input("\nEnter a Command (LIGHTON, LIGHTOFF, DISCONNECT): ")
 
    # create socket
    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -43,7 +42,7 @@ while True:
    msg_len = len("HELLO")
    header = s.pack(version, msg_type, msg_len)
 
-   file.write("Sending HELLO packet")
+   file.write("\nSending HELLO packet")
    client.send(header)
    client.sendall(helloMess)
 
@@ -77,8 +76,8 @@ while True:
    version, msg_type, msg_len = struct.unpack('>III', header)
    data = client.recv(msg_len) 
 
-   file.write("Received connection from (IP, PORT):" + str(port))
-   print("Received connection from (IP, PORT):" + str(port))
+   file.write(f"Received connection from (IP, PORT): {ip}, {port}")
+   print(f"Received connection from (IP, PORT): {ip}, {port}")
 
    if(data.decode() == "HELLO"):
       print("Recieved Messaged Hello")
