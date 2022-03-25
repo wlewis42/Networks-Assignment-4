@@ -3,7 +3,9 @@ from _thread import *
 import socket
 import struct
 
-#Setting command line arguments
+'''
+Parse port and logfile arguments
+'''
 parser = argparse.ArgumentParser(description='Message.')
 
 parser.add_argument('-p', type=str, required=True)
@@ -15,47 +17,70 @@ logFile = args.l
 
 s = struct.Struct("> III")
 
-#Checking for valid port
+'''
+Validate port number is within proper range
+'''
 if((int(port)) < 0 or (int(port)) > 65535) :
     print("\nError invalid port, try agian with a different port number.")
     exit()
 
+'''
+Define function for threaded client
+    arguements: connection
+    returns: none
+'''
 def threaded_client(connection):
+        '''
+        Open logfile in append mode
+        '''
         file = open(logFile, "a")
 
-        #Receiving Data from client
+        '''
+        Receive header and data
+        '''
         header = connection.recv(struct.calcsize('>III'))
         version, msg_type, msg_len = struct.unpack('>III', header)
         data = connection.recv(msg_len)
 
-        #Acknowledgement 
+        '''
+        Three-way handshake 
+        '''
         if(data.decode()=="HELLO"):
-
-            file.write(f"\nReceived connection from (IP, PORT): {address}")
-            # print("Received connection from (IP, PORT):" + str(port))
-            print(f"\nReceived connection from (IP, PORT): {address}")
-
+            '''
+            IF client sent HELLO, reply with HELLO
+            '''
+            file.write(f"Received connection from (IP, PORT): {address}\n")
+            print(f"Received connection from (IP, PORT): {address}\n")
             version= 17
             msg_type = 0
-            message = "HELLO".encode()
+            msg = "HELLO".encode()
             msg_len = len("HELLO")
             header = s.pack(version, msg_type, msg_len)
-
             connection.send(header)
-            connection.sendall(message)
+            connection.sendall(msg)
 
-        #Printing data that is recieved
-        print(f"\nReceived Data: version: {version} message_type:  {msg_type} length: {msg_len}")
+        '''
+        Log message data from header
+        '''
+        print(f"\nReceived Data: version: {version} message_type:  {msg_type} length: {msg_len}\n")
         file.write(f"\nReceived Data: version: {version} message_type:  {msg_type} length: {msg_len}\n")
 
-        #Checking for valid version
+        '''
+        Check for valid version number
+        '''
         if(version==17):
             print("\nVERSION ACCEPTED")
             file.write("\nVERSION ACCEPTED")
 
+            '''
+            Receive message from client
+            '''
             header = connection.recv(struct.calcsize('>III'))
             version, msg_type, msg_len = struct.unpack('>III', header)
 
+            '''
+            Check for message type
+            '''
             if(msg_type==1):
                 print("\nEXECUTING SUPPORTED COMMAND: LIGHTON")
                 file.write("\nEXECUTING SUPPORTED COMMAND: LIGHTON")
@@ -90,17 +115,18 @@ def threaded_client(connection):
             print("\nVERSION MISMATCH")
             file.write("\nVERSION MISMATCH")
 
-#Creating Socket
+'''
+Handle incoming connections
+'''
 while True: 
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     socket.inet_aton("127.0.0.1")
 
     try:
-        serversocket.bind(("127.0.0.1", port))
+        serversocket.bind(("127.0.0.1", port))    
+        serversocket.listen(5)
+        conn, address = serversocket.accept()
+        start_new_thread(threaded_client, (conn,))
 
     except: 
-        print("\nError, did not bind. Try again with a different port number")
-        
-    serversocket.listen(5)
-    conn, address = serversocket.accept()
-    start_new_thread(threaded_client, (conn,))
+        print("ERROR: Unable to bind with that IP, PORT combination")
