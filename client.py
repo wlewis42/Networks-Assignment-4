@@ -84,6 +84,9 @@ while True:
       clientsocket.close()
       exit()
 
+   '''
+   Receive and unpack data from Server
+   '''
    header = clientsocket.recv(struct.calcsize('>III'))
    version, msg_type, msg_len = struct.unpack('>III', header)
    data = clientsocket.recv(msg_len) 
@@ -91,10 +94,16 @@ while True:
    client_log.write(f"Received connection from (IP, PORT): {ip}, {port}\n")
    print(f"Received connection from (IP, PORT): {ip}, {port}\n")
 
+   '''
+   IF HELLO received, proceed
+   '''
    if(data.decode() == "HELLO"):
       print("Recieved Messaged Hello\n")
       client_log.write("Recieved Messaged Hello\n")
 
+   '''
+   IF version is correct, proceed
+   '''
    if(version==17):
       print("VERSION ACCEPTED\n")
       client_log.write("VERSION ACCEPTED\n")
@@ -109,7 +118,9 @@ while True:
       print("VERSION MISMATCH\n")
       client_log.write("VERSION MISMATCH\n")
 
-   # send correct command
+   '''
+   Select proper function based on user_input
+   '''
    if (user_input=="LIGHTON"):
       sendLightOn()
    elif (user_input=="LIGHTOFF"):
