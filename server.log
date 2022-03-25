@@ -16,4 +16,10 @@ Received Data: version: 17 message_type:  0 length: 5
 
 VERSION ACCEPTED
 EXECUTING SUPPORTED COMMAND: DISCONNECT
+Returning SuccessReceived connection from (IP, PORT): ('127.0.0.1', 62944)
+
+Received Data: version: 17 message_type:  0 length: 5
+
+VERSION ACCEPTED
+EXECUTING SUPPORTED COMMAND: LIGHTON
 Returning Success

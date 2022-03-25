@@ -124,9 +124,9 @@ while True:
 
     try:
         serversocket.bind(("127.0.0.1", port))    
-        serversocket.listen(5)
-        conn, address = serversocket.accept()
-        start_new_thread(threaded_client, (conn,))
 
     except: 
         print("ERROR: Unable to bind with that IP, PORT combination")
+    serversocket.listen(5)
+    conn, address = serversocket.accept()
+    start_new_thread(threaded_client, (conn,))
