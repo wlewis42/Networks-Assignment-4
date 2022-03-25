@@ -1,22 +1,107 @@
 import argparse
+from pydoc import cli
 import socket
-import argparse 
+import struct
 
-ClientSocket = socket.socket()
-host = '127.0.0.1'
-port = 1233
+#Setting command line arguments
+parser = argparse.ArgumentParser(description='Connecting... ')
 
-print('Waiting for connection')
-try:
-    ClientSocket.connect((host, port))
-except socket.error as e:
-    print(str(e))
+parser.add_argument("-s", type=str, required=True)
+parser.add_argument("-p", type=str, required=True)
+parser.add_argument("-l", type=str, required=True)
+args = parser.parse_args()
 
-Response = ClientSocket.recv(1024)
+ip = args.s
+port= int(args.p)
+logFile = args.l
+
+#Checking for valid port and ip
+socket.inet_aton(ip)
+
+if((int(port)) < 0 or (int(port)) > 65535) :
+    print("Error invalid port, try agian with a different port number.")
+    exit()
+
+
+
 while True:
-    Input = input('Say Something: ')
-    ClientSocket.send(str.encode(Input))
-    Response = ClientSocket.recv(1024)
-    print(Response.decode('utf-8'))
+   user_input = input("Type one of the following commands: \n LIGHTON \n LIGHTOFF \n DISCONNECT \n ")
 
-# ClientSocket.close()
+   # create socket
+   client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+   #Open logFile
+   file = open(logFile, "a")
+
+   # connect
+   client.connect((ip,port)) 
+   s = struct.Struct("> III")
+
+   version= 17
+   msg_type = 0
+   helloMess = "HELLO".encode()
+   msg_len = len("HELLO")
+   header = s.pack(version, msg_type, msg_len)
+
+   file.write("Sending HELLO packet")
+   client.send(header)
+   client.sendall(helloMess)
+
+   def sendLightOn():
+      version= 17
+      msg_type = 1
+      msg_len = len("LIGHTON")
+      lightOn="LIGHTON".encode()
+      header = s.pack(version, msg_type, msg_len) + lightOn
+      client.sendall(header)
+
+   def sendLightOff():
+      version= 17
+      msg_type = 2
+      msg_len = len("LIGHTOFF")
+      lightOff = "LIGHTOFF".encode()
+      header = s.pack(version, msg_type, msg_len) + lightOff
+      client.send(header)
+
+   def sendDisconnect():
+      version= 17
+      msg_type = 3
+      msg_len = len("DISCONNECT")
+      disconnect = "DISCONNECT".encode()
+      header = s.pack(version, msg_type, msg_len) + disconnect
+      client.send(header)
+      client.close()
+      exit()
+
+   header = client.recv(struct.calcsize('>III'))
+   version, msg_type, msg_len = struct.unpack('>III', header)
+   data = client.recv(msg_len) 
+
+   file.write("Received connection from (IP, PORT):" + str(port))
+   print("Received connection from (IP, PORT):" + str(port))
+
+   if(data.decode() == "HELLO"):
+      print("Recieved Messaged Hello")
+      file.write("Recieved Messaged Hello")
+
+   if(version==17):
+      print("VERSION ACCEPTED")
+      file.write("VERSION ACCEPTED")
+      print("Sending Command")
+      file.write("Sending Command")
+
+      if(data.decode() == "Success"):
+         print("Received Message SUCCESS")
+         file.write("Received Message SUCCESS")
+      
+   else:
+      print("VERSION MISMATCH")
+      file.write("VERSION MISMATCH")
+
+   # send correct command
+   if (user_input=="LIGHTON"):
+      sendLightOn()
+   elif (user_input=="LIGHTOFF"):
+      sendLightOff()
+   elif (user_input=="DISCONNECT"):
+      sendDisconnect()
