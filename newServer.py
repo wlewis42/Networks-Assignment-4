@@ -62,8 +62,8 @@ def threaded_client(connection):
         '''
         Log message data from header
         '''
-        print(f"\nReceived Data: version: {version} message_type:  {msg_type} length: {msg_len}\n")
-        file.write(f"\nReceived Data: version: {version} message_type:  {msg_type} length: {msg_len}\n")
+        print(f"Received Data: version: {version} message_type:  {msg_type} length: {msg_len}\n")
+        file.write(f"Received Data: version: {version} message_type:  {msg_type} length: {msg_len}\n")
 
         '''
         Check for valid version number
