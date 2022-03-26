@@ -1,17 +1,35 @@
+Received connection from (IP, PORT): ('127.0.0.1', 50700)
 
-Received connection from (IP, PORT): ('127.0.0.1', 59065)
 Received Data: version: 17 message_type:  0 length: 5
 
 VERSION ACCEPTED
 EXECUTING SUPPORTED COMMAND: LIGHTON
-Returning Success
-Received connection from (IP, PORT): ('127.0.0.1', 59114)
+Returning SuccessReceived connection from (IP, PORT): ('127.0.0.1', 50705)
+
 Received Data: version: 17 message_type:  0 length: 5
 
 VERSION ACCEPTED
 EXECUTING SUPPORTED COMMAND: LIGHTOFF
-Returning Success
-Received connection from (IP, PORT): ('127.0.0.1', 59190)
+Returning SuccessReceived connection from (IP, PORT): ('127.0.0.1', 50717)
+
+Received Data: version: 17 message_type:  0 length: 5
+
+VERSION ACCEPTED
+EXECUTING SUPPORTED COMMAND: LIGHTON
+Returning SuccessReceived connection from (IP, PORT): ('127.0.0.1', 50719)
+
+Received Data: version: 17 message_type:  0 length: 5
+
+VERSION ACCEPTED
+EXECUTING SUPPORTED COMMAND: LIGHTOFF
+Returning SuccessReceived connection from (IP, PORT): ('127.0.0.1', 50725)
+
+Received Data: version: 17 message_type:  0 length: 5
+
+VERSION ACCEPTED
+EXECUTING SUPPORTED COMMAND: DISCONNECT
+Returning SuccessReceived connection from (IP, PORT): ('127.0.0.1', 50744)
+
 Received Data: version: 17 message_type:  0 length: 5
 
 VERSION ACCEPTED
