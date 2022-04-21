@@ -1,4 +1,30 @@
-
-Sending HELLO packetReceived connection from (IP, PORT): 127.0.0.1, 5080Recieved Messaged HelloVERSION ACCEPTEDSending Command
-Sending HELLO packetReceived connection from (IP, PORT): 127.0.0.1, 5080Recieved Messaged HelloVERSION ACCEPTEDSending Command
-Unable to connect to (IP, PORT): 127.0.0.1, 5080
+Sending HELLO packet
+Received connection from (IP, PORT): 127.0.0.1, 5050
+Recieved Messaged Hello
+VERSION ACCEPTED
+Sending Command
+Sending HELLO packet
+Received connection from (IP, PORT): 127.0.0.1, 5050
+Recieved Messaged Hello
+VERSION ACCEPTED
+Sending Command
+Sending HELLO packet
+Received connection from (IP, PORT): 127.0.0.1, 5050
+Recieved Messaged Hello
+VERSION ACCEPTED
+Sending Command
+Sending HELLO packet
+Received connection from (IP, PORT): 127.0.0.1, 5050
+Recieved Messaged Hello
+VERSION ACCEPTED
+Sending Command
+Sending HELLO packet
+Received connection from (IP, PORT): 127.0.0.1, 5050
+Recieved Messaged Hello
+VERSION ACCEPTED
+Sending Command
+Sending HELLO packet
+Received connection from (IP, PORT): 127.0.0.1, 5050
+Recieved Messaged Hello
+VERSION ACCEPTED
+Sending Command

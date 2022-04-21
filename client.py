@@ -47,13 +47,13 @@ while True:
 
    version= 17
    msg_type = 0
-   helloMess = "HELLO".encode()
+   hello = "HELLO".encode()
    msg_len = len("HELLO")
    header = s.pack(version, msg_type, msg_len)
 
    client_log.write("Sending HELLO packet\n")
    clientsocket.send(header)
-   clientsocket.sendall(helloMess)
+   clientsocket.sendall(hello)
 
    '''
    Functions to send Commands

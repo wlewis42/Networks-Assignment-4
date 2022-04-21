@@ -21,7 +21,7 @@ s = struct.Struct("> III")
 Validate port number is within proper range
 '''
 if((int(port)) < 0 or (int(port)) > 65535) :
-    print("\nError invalid port, try agian with a different port number.")
+    print("Error: Invalid port.\n")
     exit()
 
 '''
@@ -62,15 +62,15 @@ def threaded_client(connection):
         '''
         Log message data from header
         '''
-        print(f"\nReceived Data: version: {version} message_type:  {msg_type} length: {msg_len}\n")
-        file.write(f"\nReceived Data: version: {version} message_type:  {msg_type} length: {msg_len}\n")
+        print(f"Received Data: version: {version} message_type:  {msg_type} length: {msg_len}\n")
+        file.write(f"Received Data: version: {version} message_type:  {msg_type} length: {msg_len}\n")
 
         '''
         Check for valid version number
         '''
         if(version==17):
-            print("\nVERSION ACCEPTED")
-            file.write("\nVERSION ACCEPTED")
+            print("VERSION ACCEPTED\n")
+            file.write("VERSION ACCEPTED\n")
 
             '''
             Receive message from client
@@ -81,39 +81,31 @@ def threaded_client(connection):
             '''
             Check for message type
             '''
+            successMessage = "Success".encode()
             if(msg_type==1):
-                print("\nEXECUTING SUPPORTED COMMAND: LIGHTON")
-                file.write("\nEXECUTING SUPPORTED COMMAND: LIGHTON")
-
-                print("\nReturning Success")
-                file.write("\nReturning Success")
-
-                successMessage = "Success".encode()
+                print("EXECUTING SUPPORTED COMMAND: LIGHTON\n")
+                print("Returning Success\n")
+                file.write("EXECUTING SUPPORTED COMMAND: LIGHTON\n")
+                file.write("Returning Success\n")
                 connection.sendall(successMessage)
 
             elif(msg_type==2):
-                print("\nEXECUTING SUPPORTED COMMAND: LIGHTOFF")
-                file.write("\nEXECUTING SUPPORTED COMMAND: LIGHTOFF")
-
-                print("\nReturning Success")
-                file.write("\nReturning Success")
-
-                successMessage = "Success".encode()
+                print("EXECUTING SUPPORTED COMMAND: LIGHTOFF\n")
+                print("Returning Success\n")
+                file.write("EXECUTING SUPPORTED COMMAND: LIGHTOFF\n")
+                file.write("Returning Success\n")
                 connection.sendall(successMessage)
             
             elif(msg_type==3):
-                print("\nEXECUTING SUPPORTED COMMAND: DISCONNECT")
-                file.write("\nEXECUTING SUPPORTED COMMAND: DISCONNECT")
-
-                print("\nReturning Success")
-                file.write("\nReturning Success")
-
-                successMessage = "Success".encode()
+                print("EXECUTING SUPPORTED COMMAND: DISCONNECT\n")
+                print("Returning Success\n")
+                file.write("EXECUTING SUPPORTED COMMAND: DISCONNECT\n")
+                file.write("Returning Success\n")
                 connection.sendall(successMessage)
 
         else:
-            print("\nVERSION MISMATCH")
-            file.write("\nVERSION MISMATCH")
+            print("VERSION MISMATCH\n")
+            file.write("VERSION MISMATCH\n")
 
 '''
 Handle incoming connections
@@ -126,7 +118,8 @@ while True:
         serversocket.bind(("127.0.0.1", port))    
 
     except: 
-        print("ERROR: Unable to bind with that IP, PORT combination")
+        print("ERROR: Unable to bind with that IP, PORT combination\n")
+    
     serversocket.listen(5)
     conn, address = serversocket.accept()
     start_new_thread(threaded_client, (conn,))
