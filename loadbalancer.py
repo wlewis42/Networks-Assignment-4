@@ -36,7 +36,7 @@ def getPreference(replica_servers_file):
          f.write(f"Replica server at {ip}:\n\tLoss: {lossPercent}\tDelay: {delay}\tPreference: {preference}")
          preference_array.append(preference)
   
-   return preference_array.index(max(preference_array))
+   return preference_array.index(min(preference_array))
 
 # get replica with best preference
 best_server = getPreference(server_ips)

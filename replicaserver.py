@@ -4,7 +4,6 @@ import socket
 from _thread import *
 import struct
 
-from requests import request
 
 def download_file(url):
    try:
@@ -98,9 +97,9 @@ web_content = download_file(webpage).read()
 
 #create server socket
 server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-socket.inet_aton("127.0.0.1")
+# socket.inet_aton("127.0.0.1")
 try:
-   server.bind(("127.0.0.1", port))    
+   server.bind(("", port))    
 
 except: 
    print("ERROR: Unable to bind with that IP, PORT combination\n")
