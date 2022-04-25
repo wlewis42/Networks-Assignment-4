@@ -1,0 +1,3 @@
+python replicaserver.py -p 5050 -l replog.txt -w www.google.com
+python loadbalancer.py -s replica_servers.txt -p 5050 -l loadballog.txt 
+python anonclient.py -s 127.0.0.1 -p 5050 -l anonclientlog.txt -f index.txt

@@ -1,0 +1,15 @@
+Message type: 0	 Command: HELLO
+Sending HELLO packet
+Received connection from (IP, PORT): 127.0.0.1, 5050
+Preferred Replica Server Address: b'HELLO'
+Attemping Connection to b'HELLO'
+Message type: 0	 Command: HELLO
+Sending HELLO packet
+Message type: 0	 Command: HELLO
+Sending HELLO packet
+Message type: 0	 Command: HELLO
+Sending HELLO packet
+Message type: 0	 Command: HELLO
+Sending HELLO packet
+Message type: 0	 Command: HELLO
+Sending HELLO packet
