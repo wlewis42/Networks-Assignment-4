@@ -29,10 +29,10 @@ def sendCommand(command):
    s = struct.Struct("> III")
 
    with open(logFile, "a") as f:
-      print(f"Message type: {msg_type}\t Command: {command}\n")
-      f.write(f"Message type: {msg_type}\t Command: {command}\n")
       version = 17
       msg_type = 0
+      print(f"Message type: {msg_type}\t Command: {command}\n")
+      f.write(f"Message type: {msg_type}\t Command: {command}\n")
       com = command.encode()
       msg_len = len(command)
       header = s.pack(version, msg_type, msg_len)
@@ -42,6 +42,7 @@ def sendCommand(command):
       clientsocket.send(header)
       clientsocket.sendall(com)
 
+sendCommand("REQUEST FILE")
 # receive ip of best replica server from loadbalancer
 '''
 Receive and unpack data
@@ -49,7 +50,7 @@ Receive and unpack data
 with open(logFile, 'a') as f:
    header = clientsocket.recv(struct.calcsize('>III'))
    version, msg_type, msg_len = struct.unpack('>III', header)
-   server_ip = clientsocket.recv(msg_len) 
+   server_ip = clientsocket.recv(msg_len).decode()
 
    print(f"Received connection from (IP, PORT): {ip}, {port}\n")
    f.write(f"Received connection from (IP, PORT): {ip}, {port}\n")
@@ -63,15 +64,27 @@ with open(logFile, 'a') as f:
    f.write(f"Attemping Connection to {server_ip}\n")
 
 # connect to replica server
+clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 clientsocket.connect((server_ip,port))
 
-sendCommand("REQUEST FILE")
+'''
+UNTIL NEXT COMMENT NEEDS TO BE TESTED
+The idea is to continuously check if the size of the received is less
+than the length given from the replica server
+'''
+BUFFERSIZE = 128
 
-# receive contentfile
 req_head = clientsocket.recv(struct.calcsize('>III'))
 req_ver, req_type, req_len = struct.unpack('>III', req_head)
-req_data = clientsocket.recv(req_len)
+req_data = clientsocket.recv(BUFFERSIZE)
+while len(req_data) < req_len:
+# receive contentfile
+   req_data += clientsocket.recv(BUFFERSIZE)
+'''
+NEXT COMMENT
+'''
 
 # decode and write to file
 with open(contentfile,'w') as f:
    f.write(req_data.decode())
+clientsocket.close()
